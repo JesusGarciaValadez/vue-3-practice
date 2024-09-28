@@ -3,7 +3,7 @@ defineProps({
   pokemons: {
     type: Array<String>,
     required: true,
-    default: (): Array => ([])
+    default: () => ([])
   }
 })
 </script>
@@ -19,7 +19,7 @@ defineProps({
       </tr>
     </thead>
     <tbody class="bg-white">
-      <tr class="even:bg-gray-50" v-for="({ name }, index) in pokemons" :key='`${name}-${index}`'>
+      <tr class="even:bg-gray-50" v-for="({ name }, index) in pokemons" :key="`${name}-${index}`">
         <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-500 sm:pl-3">
           {{ index + 1 }}
         </td>

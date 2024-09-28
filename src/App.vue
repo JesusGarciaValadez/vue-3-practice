@@ -10,7 +10,8 @@ import PokedexTable from './components/PokedexTable.vue'
 const { pokedex, fetchAll: fetchAllPokemons } = usePokedex()
 fetchAllPokemons()
 
-const input: Ref<null | String> = ref(null)
+const input: Ref<null> = ref(null)
+const searchTerm: Ref<String> = ref('')
 const onKeyPress = (event: KeyboardEvent): void => {
   if (event.key === '/') {
     event.preventDefault()
@@ -18,22 +19,19 @@ const onKeyPress = (event: KeyboardEvent): void => {
     input.value.input.focus()
   }
 }
-
-const searchInput: Ref<String> = ref('')
-
 onMounted((): void => document.body.addEventListener('keypress', onKeyPress))
 onUnmounted((): void => document.body.addEventListener('keypress', onKeyPress))
 
-const pokemons:ComputedRef<Array<String>> = computed((): Array<String> => {
-  if (searchInput.value === '') {
+const pokemons: ComputedRef = computed(() => {
+  if (searchTerm.value === '') {
     return pokedex.value
   }
 
-  return pokedex.value.filter((pokemon: Pokemon): Pokemon => pokemon?.name?.includes(searchInput.value))
+  return pokedex.value.filter((pokemon: Pokemon) => pokemon.name.includes(searchTerm.value))
 })
 </script>
 
 <template>
-  <InputSearch ref="input" v-model:search-input="searchInput" />
+  <InputSearch ref="input" v-model:search-term="searchTerm" />
   <PokedexTable :pokemons="pokemons" />
 </template>
