@@ -1,47 +1,39 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
+import type { Ref, ComputedRef } from 'vue'
+import type Pokemon from 'types/Pokemon'
+import usePokedex from './composables/usePokedex'
+
+import InputSearch from './components/InputSearch.vue'
+import PokedexTable from './components/PokedexTable.vue'
+
+const { pokedex, fetchAll: fetchAllPokemons } = usePokedex()
+fetchAllPokemons()
+
+const input: Ref<null | String> = ref(null)
+const onKeyPress = (event: KeyboardEvent): void => {
+  if (event.key === '/') {
+    event.preventDefault()
+
+    input.value.input.focus()
+  }
+}
+
+const searchInput: Ref<String> = ref('')
+
+onMounted((): void => document.body.addEventListener('keypress', onKeyPress))
+onUnmounted((): void => document.body.addEventListener('keypress', onKeyPress))
+
+const pokemons:ComputedRef<Array<String>> = computed((): Array<String> => {
+  if (searchInput.value === '') {
+    return pokedex.value
+  }
+
+  return pokedex.value.filter((pokemon: Pokemon): Pokemon => pokemon?.name?.includes(searchInput.value))
+})
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <InputSearch ref="input" v-model:search-input="searchInput" />
+  <PokedexTable :pokemons="pokemons" />
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>

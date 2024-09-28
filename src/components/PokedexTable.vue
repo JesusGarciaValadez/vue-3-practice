@@ -1,12 +1,11 @@
 <script setup lang="ts">
 defineProps({
   pokemons: {
-    type: Array,
+    type: Array<String>,
     required: true,
     default: (): Array => ([])
   }
 })
-
 </script>
 
 <template>
@@ -20,7 +19,7 @@ defineProps({
       </tr>
     </thead>
     <tbody class="bg-white">
-      <tr v-for="({ name }, index) in pokemons" :key="`${name}-${index}`" class="even:bg-gray-50">
+      <tr class="even:bg-gray-50" v-for="({ name }, index) in pokemons" :key='`${name}-${index}`'>
         <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-500 sm:pl-3">
           {{ index + 1 }}
         </td>
